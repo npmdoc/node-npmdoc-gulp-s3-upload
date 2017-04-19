@@ -1,0 +1,308 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+        href="https://github.com/clineamb/gulp-s3-upload"
+
+    >gulp-s3-upload (v1.6.4)</a>
+</h1>
+<h4>A gulp task to asynchronous upload/update assets to an AWS S3 Bucket.</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-s3-upload">module gulp-s3-upload</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-s3-upload.gulp-s3-upload">
+            function <span class="apidocSignatureSpan"></span>gulp-s3-upload
+            <span class="apidocSignatureSpan">(config, s3_config)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gulp-s3-upload.</span>helper</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-s3-upload.helper">module gulp-s3-upload.helper</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-s3-upload.helper.buildName">
+            function <span class="apidocSignatureSpan">gulp-s3-upload.helper.</span>buildName
+            <span class="apidocSignatureSpan">(dirs, filename)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-s3-upload.helper.filterOptions">
+            function <span class="apidocSignatureSpan">gulp-s3-upload.helper.</span>filterOptions
+            <span class="apidocSignatureSpan">(params)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-s3-upload.helper.parsePath">
+            function <span class="apidocSignatureSpan">gulp-s3-upload.helper.</span>parsePath
+            <span class="apidocSignatureSpan">(path)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-s3-upload" id="apidoc.module.gulp-s3-upload">module gulp-s3-upload</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-s3-upload.gulp-s3-upload" id="apidoc.element.gulp-s3-upload.gulp-s3-upload">
+        function <span class="apidocSignatureSpan"></span>gulp-s3-upload
+        <span class="apidocSignatureSpan">(config, s3_config)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">gulp-s3-upload = function (config, s3_config) {
+    var aws_config = {};
+
+    if(_.isUndefined(config)) {
+        config = {};
+    }
+
+    //  Maintain backwards compatibility with legacy key and secret options
+    if(config.key) {
+        aws_config.accessKeyId = config.key;
+    }
+
+    if(config.secret) {
+        aws_config.secretAccessKey = config.secret;
+    }
+
+    //  If using IAM
+
+    if(_.has(config, &#x27;useIAM&#x27;) &#x26;&#x26; config.useIAM) {
+        config = {};
+    }
+
+    //  Intentionally not mandating the accessKeyId and secretAccessKey as they
+    //  will be loaded automatically by the SDK from either environment variables
+    //  or the credentials file.
+    //  http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html
+
+    // Configure the proxy if an environment variable is present.
+
+    if(process.env.HTTPS_PROXY) {
+        gutil.log(&#x22;Setting https proxy to %s&#x22;, process.env.HTTPS_PROXY);
+
+        if(!aws_config.httpOptions) {
+            aws_config.httpOptions = {};
+        }
+
+        var HttpsProxyAgent = require(&#x27;https-proxy-agent&#x27;);
+
+        aws_config.httpOptions.agent = new HttpsProxyAgent(process.env.HTTPS_PROXY);
+    }
+
+    //  Update the global AWS config if we have any overrides
+
+    AWS.config.update(_.extend({}, config, aws_config));
+
+    return gulpPrefixer(AWS, s3_config);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-s3-upload.helper" id="apidoc.module.gulp-s3-upload.helper">module gulp-s3-upload.helper</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-s3-upload.helper.buildName" id="apidoc.element.gulp-s3-upload.helper.buildName">
+        function <span class="apidocSignatureSpan">gulp-s3-upload.helper.</span>buildName
+        <span class="apidocSignatureSpan">(dirs, filename)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">buildName = function (dirs, filename) {
+    return Path.join(dirs, filename);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+    keyname = keyTransform(file.relative);
+
+} else {
+    // ...Otherwise keep it exactly parallel.
+
+    keyparts = helper.parsePath(file.relative);
+    keyname  = helper.<span class="apidocCodeKeywordSpan">buildName</span>(keyparts.dirname, keyparts.basename + keyparts.extname
+);
+}
+
+
+keyname = keyname.replace(/\\/g, &#x22;/&#x22;); // JIC Windows (uses backslashes)
+
+
+// === Mime Lookup/Transform ============================
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-s3-upload.helper.filterOptions" id="apidoc.element.gulp-s3-upload.helper.filterOptions">
+        function <span class="apidocSignatureSpan">gulp-s3-upload.helper.</span>filterOptions
+        <span class="apidocSignatureSpan">(params)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">filterOptions = function (params) {
+    var omit_array = [
+        &#x27;Body&#x27;,
+        &#x27;bucket&#x27;,
+        &#x27;charset&#x27;,
+        &#x27;ContentType&#x27;,
+        &#x27;etag_hash&#x27;,
+        &#x27;Key&#x27;,
+        &#x27;keyTransform&#x27;,
+        &#x27;metadataMap&#x27;,
+        &#x27;manualContentEncoding&#x27;,
+        &#x27;maps&#x27;,
+        &#x27;mimeTypeLookup&#x27;,
+        &#x27;nameTransform&#x27;,
+        &#x27;onChange&#x27;,
+        &#x27;onNoChange&#x27;,
+        &#x27;onNew&#x27;,
+        &#x27;uploadNewFilesOnly&#x27;,
+        &#x27;verbose&#x27;
+    ];
+
+    return _.omit(params, omit_array);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+callback(null);
+
+                } else {
+
+/*** FILE &#x22;LOOP&#x22; ***/
+
+obj_opts = _.extend({}, helper.<span class="apidocCodeKeywordSpan">filterOptions</span>(options)); // always make sure clean hash
+
+obj_opts.Bucket     = the_bucket;
+obj_opts.Key        = keyname;
+obj_opts.Body       = file.contents;
+
+if(mimetype.length) {
+    //  A check in case of map ContentType
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-s3-upload.helper.parsePath" id="apidoc.element.gulp-s3-upload.helper.parsePath">
+        function <span class="apidocSignatureSpan">gulp-s3-upload.helper.</span>parsePath
+        <span class="apidocSignatureSpan">(path)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">parsePath = function (path) {
+    var extname = Path.extname(path);
+
+    return {
+        &#x27;dirname&#x27;:  Path.dirname(path),
+        &#x27;basename&#x27;: Path.basename(path, extname),
+        &#x27;extname&#x27;:  extname
+    };
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    //  the path of the file, too.
+
+    keyname = keyTransform(file.relative);
+
+} else {
+    // ...Otherwise keep it exactly parallel.
+
+    keyparts = helper.<span class="apidocCodeKeywordSpan">parsePath</span>(file.relative);
+    keyname  = helper.buildName(keyparts.dirname, keyparts.basename + keyparts.extname);
+}
+
+
+keyname = keyname.replace(/\\/g, &#x22;/&#x22;); // JIC Windows (uses backslashes)
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
